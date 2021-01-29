@@ -1,4 +1,6 @@
 const mongoose = require("mongoose")
+const bcrypt = require("bcrypt")
+const saltRounds = 10
 
 let userSchema = mongoose.Schema({
     firstName:{
@@ -38,4 +40,22 @@ let userSchema = mongoose.Schema({
         type:String
     }
 
+
 },{timestamps:true})
+
+userSchema.virtual('name').get(function(){
+    return this.firstName + ' ' + this.lastName
+})
+
+
+userSchema.virtual('password').set(function(password){
+    this.hash_password=bcrypt.hashSync(password,saltRounds)
+})
+
+
+userSchema.methods.authenticate = function authenticate(password){
+    return bcrypt.compareSync(password,this.hash_password)
+}
+
+const User = mongoose.model('User',userSchema)
+module.exports = User
