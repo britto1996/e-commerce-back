@@ -1,9 +1,14 @@
-const express = require("express")
-const { signup, signin, authenticateToken } = require("../controllers/user")
-const router = express.Router()
+const express = require("express");
+const { signup, signin, authenticateToken } = require("../controllers/user");
+const {
+  signupValidation,
+  isValid,
+  signinValidation,
+} = require("../controllers/validator/validator");
+const router = express.Router();
 // var User = require('../models/user')
 
-router.post('/signup',signup)
-router.post('/signin',signin)
-router.get('/profile',authenticateToken)
-module.exports = router
+router.post("/signup", signupValidation, isValid, signup);
+router.post("/signin", signinValidation, isValid, signin);
+router.get("/profile", authenticateToken);
+module.exports = router;
